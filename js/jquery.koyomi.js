@@ -1,13 +1,13 @@
 ;(function(jQuery) {
     'use strict';
+    var Now      = new Date();
     var weekData = null;
     var settings = null;
-    var methods = {
+    var methods  = {
         init: function(options) {
-            var today    = new Date();
             var defaults = jQuery.extend(true,{
-                "year": today.getFullYear(),
-                "month": today.getMonth()+1,  // 1-12
+                "year": Now.getFullYear(),
+                "month": Now.getMonth()+1,  // 1-12
                 "weekBeginning": 0, //0-6
                 "weekName":  ["日", "月", "火", "水", "木", "金", "土"],
                 "weekClass": ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
@@ -15,9 +15,9 @@
             //
             return this.each(function() {
                 var $this = jQuery(this);
+                var koyomi = new Koyomi($this, settings);
                 settings = mergeOptions($this, defaults);
                 weekData = initWeekObject();
-                var koyomi = new Koyomi($this, settings);
                 //html build
                 koyomi.buildKoyomi();
             });
@@ -36,7 +36,25 @@
                 return counter++;
             }
         }
-    };
+    }
+    var ClassAattribute = function() {
+        var Today = new Date(Now.getFullYear(), Now.getMonth(), Now.getDate());
+        return {
+            isToday: function(day) {
+                if(Today.getTime() === new Date(settings.year, settings.month-1, day).getTime()) {
+                    return true;
+                }
+                return false;
+            },
+            getDailyClass: function(day) {
+                var dailyClass = '';
+                if(this.isToday(day)) {
+                    dailyClass += ' today';
+                }
+                return dailyClass;
+            }
+        }
+    }
     jQuery.fn.koyomi = function(method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -89,11 +107,12 @@
     }
     function buildMain() {
         //曜日
-        var firstDay = new Date(settings.year, settings.month-1, 1);    //初日の曜日
-        var endDay   = new Date(settings.year, settings.month,   0);    //月の最終日
-        var i        = 0;
-        var counter  = Counter(0);
-        var html     = '';
+        var firstDay  = new Date(settings.year, settings.month-1, 1);    //初日の曜日
+        var endDay    = new Date(settings.year, settings.month,   0);    //月の最終日
+        var i         = 0;
+        var counter   = Counter(0);
+        var classAttr = ClassAattribute();
+        var html      = '';
         //before余白
         if(settings.weekBeginning != firstDay.getDay()) {
             html += '<tr>';
@@ -102,11 +121,11 @@
                 counter.countUp();
             }
         }
-        for(var i=1; i<=endDay.getDate(); i++) {
+        for(i=1; i<=endDay.getDate(); i++) {
             if(!counter.getCellNum()) {
                 html += '<tr>';
             }
-            html += '<td>'+i+'</td>';
+            html += '<td class="'+classAttr.getDailyClass(i)+'">'+i+'</td>';
             counter.countUp();
             if(!counter.getCellNum()) {
                 html += '</tr>';
@@ -125,8 +144,8 @@
     function initWeekObject() {
         var counter = Counter(settings.weekBeginning);
         var result  = new Object;
-        for(var j=0; j < 7; j++) {
-            result[j] = {'name': settings.weekName[counter.getCellNum()], 'class': settings.weekClass[counter.getCellNum()]}
+        for(var i=0; i<7; i++) {
+            result[i] = {'name': settings.weekName[counter.getCellNum()], 'class': settings.weekClass[counter.getCellNum()]}
             counter.countUp();
         }
         return result;
