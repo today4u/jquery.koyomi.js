@@ -40,18 +40,23 @@
     var ClassAattribute = function() {
         var Today = new Date(Now.getFullYear(), Now.getMonth(), Now.getDate());
         return {
-            isToday: function(day) {
-                if(Today.getTime() === new Date(settings.year, settings.month-1, day).getTime()) {
+            getDailyClass: function(day) {
+                var dailyClass = [];
+                var targetDate = new Date(settings.year, settings.month-1, day);
+                if(this.isToday(targetDate)) {
+                    dailyClass.push('today');
+                }
+                dailyClass.push(this.getDayOfTheWeek(targetDate));
+                return dailyClass.join(' ');
+            },
+            isToday: function(targetDate) {
+                if(Today.getTime() === targetDate.getTime()) {
                     return true;
                 }
                 return false;
             },
-            getDailyClass: function(day) {
-                var dailyClass = '';
-                if(this.isToday(day)) {
-                    dailyClass += ' today';
-                }
-                return dailyClass;
+            getDayOfTheWeek: function(targetDate) {
+                return settings.weekClass[targetDate.getDay()];
             }
         }
     }
