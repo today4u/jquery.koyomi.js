@@ -9,8 +9,9 @@
                 "year": Now.getFullYear(),
                 "month": Now.getMonth()+1,  // 1-12
                 "weekBeginning": 0, //0-6
-                "weekName":  ["日", "月", "火", "水", "木", "金", "土"],
+                "weekNames":  ["日", "月", "火", "水", "木", "金", "土"],
                 "weekClass": ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
+                "monthNames": ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             },options);
             //
             return this.each(function() {
@@ -86,9 +87,7 @@
                 var html  = '';
                 html += '<table>';
                 html +=   '<thead>';
-                html +=     '<tr class="week">';
-                html +=        buildWeek();
-                html +=     '</tr>';
+                html +=     buildHead();
                 html +=   '</thead>';
                 html +=   '<tbody>';
                 html +=     buildMain();
@@ -103,11 +102,16 @@
         });
         return Koyomi;
     })();
-    function buildWeek() {
-        var html  =       '';
+    function buildHead() {
+        var html = '';
+        html += '<tr>';
+        html +=   '<td colspan="7">'+settings.monthNames[settings.month-1]+'</td>';
+        html += '</tr>';
+        html += '<tr class="week">';
         Object.keys(weekData).forEach(function(value, index) {
             html += '<td class="'+weekData[value].class+'">'+weekData[value].name+'</td>';
         });
+        html += '</tr>';
         return html;
     }
     function buildMain() {
@@ -150,7 +154,7 @@
         var counter = Counter(settings.weekBeginning);
         var result  = new Object;
         for(var i=0; i<7; i++) {
-            result[i] = {'name': settings.weekName[counter.getCellNum()], 'class': settings.weekClass[counter.getCellNum()]}
+            result[i] = {'name': settings.weekNames[counter.getCellNum()], 'class': settings.weekClass[counter.getCellNum()]}
             counter.countUp();
         }
         return result;
