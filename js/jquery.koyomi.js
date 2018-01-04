@@ -9,9 +9,9 @@
                 "year": Now.getFullYear(),
                 "month": Now.getMonth()+1,  // 1-12
                 "weekBeginning": 0, //0-6
-                "weekNames":  ["日", "月", "火", "水", "木", "金", "土"],
-                "weekClass": ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
-                "monthNames": ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                "weekdayNames" : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
+                "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             },options);
             //
             return this.each(function() {
@@ -57,7 +57,7 @@
                 return false;
             },
             getDayOfTheWeek: function(targetDate) {
-                return settings.weekClass[targetDate.getDay()];
+                return settings.weekdayClass[targetDate.getDay()];
             }
         }
     }
@@ -154,7 +154,7 @@
         var counter = Counter(settings.weekBeginning);
         var result  = new Object;
         for(var i=0; i<7; i++) {
-            result[i] = {'name': settings.weekNames[counter.getCellNum()], 'class': settings.weekClass[counter.getCellNum()]}
+            result[i] = {'name': settings.weekdayNames[counter.getCellNum()], 'class': settings.weekdayClass[counter.getCellNum()]}
             counter.countUp();
         }
         return result;
