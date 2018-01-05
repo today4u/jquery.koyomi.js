@@ -6,7 +6,7 @@
     var methods  = {
         init: function(options) {
             var defaults = jQuery.extend(true,{
-                "year": Now.getFullYear(),
+                "year":  Now.getFullYear(),
                 "month": Now.getMonth()+1,  // 1-12
                 "weekBeginning": 0, //0-6
                 "weekdayNames" : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -41,7 +41,13 @@
     var ClassAattribute = function() {
         var Today = new Date(Now.getFullYear(), Now.getMonth(), Now.getDate());
         return {
-            getDailyClass: function(day) {
+            getSpaceClass: function(dayOfTheWeekNumber) {
+                console.log(dayOfTheWeekNumber);
+                var classes = [];
+                classes.push(settings.weekdayClass[dayOfTheWeekNumber]);
+                return classes.join(' ');
+            },
+            getAttribute: function(day) {
                 var dailyClass = [];
                 var targetDate = new Date(settings.year, settings.month-1, day);
                 if(this.isToday(targetDate)) {
@@ -126,7 +132,7 @@
         if(settings.weekBeginning != firstDay.getDay()) {
             html += '<tr>';
             while(counter.getWeekNum() != firstDay.getDay()) {
-                html += '<td></td>';
+                html += '<td class="'+classAttr.getSpaceClass(counter.getWeekNum())+'"></td>';
                 counter.countUp();
             }
         }
@@ -134,7 +140,7 @@
             if(!counter.getCellNum()) {
                 html += '<tr>';
             }
-            html += '<td class="'+classAttr.getDailyClass(i)+'">'+i+'</td>';
+            html += '<td class="'+classAttr.getAttribute(i)+'">'+i+'</td>';
             counter.countUp();
             if(!counter.getCellNum()) {
                 html += '</tr>';
@@ -143,7 +149,7 @@
         //after余白
         if(counter.getCellNum()) {
             while(counter.getCellNum()) {
-                html += '<td></td>';
+                html += '<td class="'+classAttr.getSpaceClass(counter.getWeekNum())+'"></td>';
                 counter.countUp();
             }
             html += '</tr>';
