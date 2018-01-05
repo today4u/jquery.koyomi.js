@@ -41,29 +41,19 @@
     var ClassAattribute = function() {
         var Today = new Date(Now.getFullYear(), Now.getMonth(), Now.getDate());
         return {
-            getSpaceClass: function(dayOfTheWeekNumber) {
-                console.log(dayOfTheWeekNumber);
-                var classes = [];
-                classes.push(settings.weekdayClass[dayOfTheWeekNumber]);
-                return classes.join(' ');
-            },
-            getAttribute: function(day) {
-                var dailyClass = [];
-                var targetDate = new Date(settings.year, settings.month-1, day);
-                if(this.isToday(targetDate)) {
-                    dailyClass.push('today');
+            getAttribute: function(weeknumber, day = null) {
+                var attributes = [];
+                attributes.push(settings.weekdayClass[weeknumber]);
+                if(day != null && this.isToday(new Date(settings.year, settings.month-1, day))) {
+                    attributes.push('today');
                 }
-                dailyClass.push(this.getDayOfTheWeek(targetDate));
-                return dailyClass.join(' ');
+                return attributes.join(' ');
             },
             isToday: function(targetDate) {
                 if(Today.getTime() === targetDate.getTime()) {
                     return true;
                 }
                 return false;
-            },
-            getDayOfTheWeek: function(targetDate) {
-                return settings.weekdayClass[targetDate.getDay()];
             }
         }
     }
@@ -132,7 +122,7 @@
         if(settings.weekBeginning != firstDay.getDay()) {
             html += '<tr>';
             while(counter.getWeekNum() != firstDay.getDay()) {
-                html += '<td class="'+classAttr.getSpaceClass(counter.getWeekNum())+'"></td>';
+                html += '<td class="'+classAttr.getAttribute(counter.getWeekNum())+'"></td>';
                 counter.countUp();
             }
         }
@@ -140,7 +130,7 @@
             if(!counter.getCellNum()) {
                 html += '<tr>';
             }
-            html += '<td class="'+classAttr.getAttribute(i)+'">'+i+'</td>';
+            html += '<td class="'+classAttr.getAttribute(counter.getWeekNum(), i)+'">'+i+'</td>';
             counter.countUp();
             if(!counter.getCellNum()) {
                 html += '</tr>';
@@ -149,7 +139,7 @@
         //after余白
         if(counter.getCellNum()) {
             while(counter.getCellNum()) {
-                html += '<td class="'+classAttr.getSpaceClass(counter.getWeekNum())+'"></td>';
+                html += '<td class="'+classAttr.getAttribute(counter.getWeekNum())+'"></td>';
                 counter.countUp();
             }
             html += '</tr>';
