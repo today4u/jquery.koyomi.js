@@ -8,6 +8,7 @@
             var defaults = jQuery.extend(true,{
                 "year":  Now.getFullYear(),
                 "month": Now.getMonth()+1,  // 1-12
+                "headLabel": "%%year%% %%month%%",
                 "weekBeginning": 0, //0-6
                 "weekdayNames" : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
@@ -99,9 +100,12 @@
         return Koyomi;
     })();
     function buildHead() {
+        var headLabel = settings.headLabel;
+        headLabel = headLabel.replace('%%month%%',settings.monthNames[settings.month-1]);
+        headLabel = headLabel.replace('%%year%%', settings.year);
         var html = '';
         html += '<tr>';
-        html +=   '<td colspan="7">'+settings.monthNames[settings.month-1]+'</td>';
+        html +=   '<td colspan="7">'+headLabel+'</td>';
         html += '</tr>';
         html += '<tr class="week">';
         Object.keys(weekData).forEach(function(value, index) {
