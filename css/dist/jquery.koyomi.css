@@ -1,0 +1,12 @@
+div.koyomi .today {
+    background-color:#fdd;
+}
+div.koyomi .sun {
+    color:#f00;
+}
+div.koyomi .sat {
+    color:#00f; 
+}
+div.koyomi td {
+  text-align:center;
+}

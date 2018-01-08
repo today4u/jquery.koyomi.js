@@ -82,6 +82,7 @@
         jQuery.extend(Koyomi.prototype, {}, {
             buildKoyomi: function() {
                 var html  = '';
+                html += '<div class="koyomi">';
                 html += '<table>';
                 html +=   '<thead>';
                 html +=     buildHead();
@@ -90,6 +91,7 @@
                 html +=     buildMain();
                 html +=   '</tbody>';
                 html += '</table>';
+                html += '</div>';
                 this.$el.append(html);
             },
             _bind: function(funcName) {
