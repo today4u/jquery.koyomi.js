@@ -8,11 +8,13 @@
             var defaults = jQuery.extend(true,{
                 "year":  Now.getFullYear(),
                 "month": Now.getMonth()+1,  // 1-12
-                "headLabel": "%%year%% %%month%%",
+                "headLabel": "%year% %month%",
                 "weekBeginning": 0, //0-6
                 "weekdayNames" : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
                 "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                "url": "http://example.com/%year%/%month%/%day%/",
+                "useLink" : true,
             },options);
             //
             return this.each(function() {
@@ -103,8 +105,8 @@
     })();
     function buildHead() {
         var headLabel = settings.headLabel;
-        headLabel = headLabel.replace('%%month%%',settings.monthNames[settings.month-1]);
-        headLabel = headLabel.replace('%%year%%', settings.year);
+        headLabel = headLabel.replace('%month%',settings.monthNames[settings.month-1]);
+        headLabel = headLabel.replace('%year%', settings.year);
         var html = '';
         html += '<tr>';
         html +=   '<td colspan="7">'+headLabel+'</td>';
@@ -136,7 +138,15 @@
             if(!counter.getCellNum()) {
                 html += '<tr>';
             }
-            html += '<td class="'+classAttr.getAttribute(counter.getWeekNum(), i)+'">'+i+'</td>';
+            if(settings.useLink) {
+                var url = settings.url;
+                url = url.replace('%year%' ,settings.year);
+                url = url.replace('%month%',settings.month);
+                url = url.replace('%day%'  ,i);
+                html += '<td class="'+classAttr.getAttribute(counter.getWeekNum(), i)+'"><a href="'+url+'">'+i+'</a></td>';    
+            } else {
+                html += '<td class="'+classAttr.getAttribute(counter.getWeekNum(), i)+'">'+i+'</td>';    
+            }
             counter.countUp();
             if(!counter.getCellNum()) {
                 html += '</tr>';
