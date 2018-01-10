@@ -138,15 +138,11 @@
             if(!counter.getCellNum()) {
                 html += '<tr>';
             }
-            if(settings.useLink) {
-                var url = settings.url;
-                url = url.replace('%year%' ,settings.year);
-                url = url.replace('%month%',settings.month);
-                url = url.replace('%day%'  ,i);
-                html += '<td class="'+classAttr.getAttribute(counter.getWeekNum(), i)+'"><a href="'+url+'">'+i+'</a></td>';    
-            } else {
-                html += '<td class="'+classAttr.getAttribute(counter.getWeekNum(), i)+'">'+i+'</td>';    
-            }
+            var url = settings.url;
+            url = url.replace('%year%' ,settings.year);
+            url = url.replace('%month%',settings.month);
+            url = url.replace('%day%'  ,i);
+            html += '<td class="'+classAttr.getAttribute(counter.getWeekNum(), i)+'"><div data-url="'+url+'">'+i+'</div></td>';
             counter.countUp();
             if(!counter.getCellNum()) {
                 html += '</tr>';
