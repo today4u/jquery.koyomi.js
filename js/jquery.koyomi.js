@@ -14,7 +14,6 @@
                 "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
                 "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 "url": "http://example.com/%year%/%month%/%day%/",
-                "useLink" : true,
             },options);
             //
             return this.each(function() {
@@ -109,24 +108,25 @@
         headLabel = headLabel.replace('%year%', settings.year);
         var html = '';
         html += '<tr>';
-        html +=   '<td colspan="7">'+headLabel+'</td>';
-        html += '</tr>';
-        html += '<tr class="week">';
-        Object.keys(weekData).forEach(function(value, index) {
-            html += '<td class="'+weekData[value].class+'">'+weekData[value].name+'</td>';
-        });
+        html +=   '<td class="prev">＜</td>';
+        html +=   '<td colspan="5">'+headLabel+'</td>';
+        html +=   '<td class="next">＞</td>';
         html += '</tr>';
         return html;
     }
     function buildMain() {
-        //曜日
-        var firstDay  = new Date(settings.year, settings.month-1, 1);    //初日の曜日
-        var endDay    = new Date(settings.year, settings.month,   0);    //月の最終日
+        var firstDay  = new Date(settings.year, settings.month-1, 1);
+        var endDay    = new Date(settings.year, settings.month,   0);
         var i         = 0;
         var counter   = Counter(0);
         var classAttr = ClassAattribute();
         var html      = '';
-        //before余白
+        html += '<tr>';
+        Object.keys(weekData).forEach(function(value, index) {
+            html += '<th class="'+weekData[value].class+'">'+weekData[value].name+'</th>';
+        });
+        html += '</tr>';
+        //before 
         if(settings.weekBeginning != firstDay.getDay()) {
             html += '<tr>';
             while(counter.getWeekNum() != firstDay.getDay()) {
@@ -148,7 +148,7 @@
                 html += '</tr>';
             }
         }
-        //after余白
+        //after
         if(counter.getCellNum()) {
             while(counter.getCellNum()) {
                 html += '<td class="'+classAttr.getAttribute(counter.getWeekNum())+'"></td>';
@@ -162,7 +162,7 @@
         var counter = Counter(settings.weekBeginning);
         var result  = new Object;
         for(var i=0; i<7; i++) {
-            result[i] = {'name': settings.weekdayNames[counter.getCellNum()], 'class': settings.weekdayClass[counter.getCellNum()]}
+            result[i] = {"name": settings.weekdayNames[counter.getCellNum()], "class": settings.weekdayClass[counter.getCellNum()]}
             counter.countUp();
         }
         return result;
