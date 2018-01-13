@@ -21,25 +21,33 @@
             
             return this.each(function() {
                 var $this = jQuery(this);
-                var koyomi = new Koyomi($this, settings);
                 settings = mergeOptions($this, defaults);
-                target   = new Date(settings.year, settings.month-1 , 1);
+                var koyomi = new Koyomi($this, settings);
+                console.log(koyomi)
+                target = new Date(koyomi.settings.year, koyomi.settings.month-1 , 1);
                 weekData = initWeekObject();
                 //html build
                 koyomi.buildKoyomi();
                 koyomi.event();
 
                 jQuery($this).on("click", "div.prev", function () {
+                    koyomi.settings.month = koyomi.settings.month-1;
+                    koyomi.settings.year  = target.getFullYear();
+                    koyomi.settings.month = target.getMonth();
+                    console.log(koyomi)
+                    target = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
                     $this.empty();
-                    target  = new Date(target.getFullYear(), target.getMonth()-1, 1);
                     koyomi.buildKoyomi();
                 });
                 jQuery($this).on("click", "div.next", function () {
+                    koyomi.settings.month = koyomi.settings.month+1;;
+                    console.log(koyomi)
+                    target  = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
                     $this.empty();
-                    target  = new Date(target.getFullYear(), target.getMonth()+1, 1);
+                    $this.data('year',target.getFullYear());
+                    $this.data('month',target.getMonth());
                     koyomi.buildKoyomi();
                 });
-
             });
         }
     }
