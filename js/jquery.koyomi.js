@@ -3,6 +3,9 @@
     var Now      = new Date();
     var weekData = null;
     var settings = null;
+    var firstDay = null;
+    var endDay   = null;
+    var target   = null;
     var methods  = {
         init: function(options) {
             var defaults = jQuery.extend(true,{
@@ -15,14 +18,28 @@
                 "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 "url": "http://example.com/%year%/%month%/%day%/",
             },options);
-            //
+            
             return this.each(function() {
                 var $this = jQuery(this);
                 var koyomi = new Koyomi($this, settings);
                 settings = mergeOptions($this, defaults);
+                target   = new Date(settings.year, settings.month-1 , 1);
                 weekData = initWeekObject();
                 //html build
                 koyomi.buildKoyomi();
+                koyomi.event();
+
+                jQuery($this).on("click", "div.prev", function () {
+                    $this.empty();
+                    target  = new Date(target.getFullYear(), target.getMonth()-1, 1);
+                    koyomi.buildKoyomi();
+                });
+                jQuery($this).on("click", "div.next", function () {
+                    $this.empty();
+                    target  = new Date(target.getFullYear(), target.getMonth()+1, 1);
+                    koyomi.buildKoyomi();
+                });
+
             });
         }
     }
@@ -46,7 +63,7 @@
             getAttribute: function(weeknumber, day = null) {
                 var attributes = [];
                 attributes.push(settings.weekdayClass[weeknumber]);
-                if(day != null && this.isToday(new Date(settings.year, settings.month-1, day))) {
+                if(day != null && this.isToday(new Date(target.getFullYear(), target.getMonth(), day))) {
                     attributes.push('today');
                 }
                 return attributes.join(' ');
@@ -82,6 +99,8 @@
         //インスタンスメソッド
         jQuery.extend(Koyomi.prototype, {}, {
             buildKoyomi: function() {
+                firstDay  = new Date(target.getFullYear(), target.getMonth(), 1);
+                endDay    = new Date(target.getFullYear(), target.getMonth()+1, 0);
                 var html  = '';
                 html += '<div class="koyomi">';
                 html += '<table>';
@@ -99,24 +118,24 @@
               var that = this;
               return function() { that[funcName].apply(that, arguments) };
             },
+            event: function() {
+            }
         });
         return Koyomi;
     })();
     function buildHead() {
         var headLabel = settings.headLabel;
-        headLabel = headLabel.replace('%month%',settings.monthNames[settings.month-1]);
-        headLabel = headLabel.replace('%year%', settings.year);
+        headLabel = headLabel.replace('%month%',settings.monthNames[target.getMonth()]);
+        headLabel = headLabel.replace('%year%', target.getFullYear());
         var html = '';
         html += '<tr>';
-        html +=   '<td class="prev">＜</td>';
-        html +=   '<td colspan="5">'+headLabel+'</td>';
-        html +=   '<td class="next">＞</td>';
+        html +=   '<td><div class="prev">＜</div></td>';
+        html +=   '<td colspan="5"><div class="headLabel">'+headLabel+'</div></td>';
+        html +=   '<td><div class="next">＞</div></td>';
         html += '</tr>';
         return html;
     }
     function buildMain() {
-        var firstDay  = new Date(settings.year, settings.month-1, 1);
-        var endDay    = new Date(settings.year, settings.month,   0);
         var i         = 0;
         var counter   = Counter(0);
         var classAttr = ClassAattribute();
@@ -139,8 +158,8 @@
                 html += '<tr>';
             }
             var url = settings.url;
-            url = url.replace('%year%' ,settings.year);
-            url = url.replace('%month%',settings.month);
+            url = url.replace('%year%' ,target.getFullYear());
+            url = url.replace('%month%',target.getMonth()+1);
             url = url.replace('%day%'  ,i);
             html += '<td class="'+classAttr.getAttribute(counter.getWeekNum(), i)+'"><div data-url="'+url+'">'+i+'</div></td>';
             counter.countUp();
@@ -168,4 +187,3 @@
         return result;
     }
 }) (jQuery);
-
