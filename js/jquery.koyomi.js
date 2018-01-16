@@ -8,6 +8,7 @@
                 "year":  Now.getFullYear(),
                 "month": Now.getMonth()+1,  // 1-12
                 "headLabel": "%year% %month%",
+                "prevNext": true,
                 "weekBeginning": 0, //0-6
                 "weekdayNames" : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
@@ -93,10 +94,16 @@
                 headLabel = headLabel.replace('%month%',this.settings.monthNames[this.settings.target.getMonth()]);
                 headLabel = headLabel.replace('%year%', this.settings.target.getFullYear());
                 var html = '';
+                var colspan = 7;
                 html += '<tr>';
-                html +=   '<td><div class="prev">＜</div></td>';
-                html +=   '<td colspan="5"><div class="headLabel">'+headLabel+'</div></td>';
-                html +=   '<td><div class="next">＞</div></td>';
+                if(this.settings.prevNext) {
+                    colspan = 5;
+                    html +=   '<td><div class="prev">＜</div></td>';
+                }
+                html +=   '<td colspan="'+colspan+'"><div class="headLabel">'+headLabel+'</div></td>';
+                if(this.settings.prevNext) {
+                    html +=   '<td><div class="next">＞</div></td>';
+                }
                 html += '</tr>';
                 return html;
             },
