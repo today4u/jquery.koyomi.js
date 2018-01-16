@@ -1,10 +1,7 @@
 ;(function(jQuery) {
     'use strict';
     var Now      = new Date();
-    var settings = null;
-    var firstDay = null;
-    var endDay   = null;
-    // var target   = null;
+    var Today    = new Date(Now.getFullYear(), Now.getMonth(), Now.getDate());
     var methods  = {
         init: function(options) {
             var defaults = jQuery.extend(true,{
@@ -20,13 +17,12 @@
             
             return this.each(function() {
                 var $this = jQuery(this);
-                settings = mergeOptions($this, defaults);
+                var settings = mergeOptions($this, defaults);
                 var koyomi = new Koyomi($this, settings);
                 koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1 , 1);
                 //html build
                 koyomi.buildKoyomi();
-                koyomi.event();
-
+                //event (next or prev)
                 jQuery($this).on("click", "div.prev", function () {
                     koyomi.settings.month = koyomi.settings.month-1;
                     koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
@@ -56,25 +52,6 @@
             }
         }
     }
-    var ClassAattribute = function(koyomi) {
-        var Today = new Date(Now.getFullYear(), Now.getMonth(), Now.getDate());
-        return {
-            getAttribute: function(weeknumber, day = null) {
-                var attributes = [];
-                attributes.push(koyomi.settings.weekdayClass[weeknumber]);
-                if(day != null && this.isToday(new Date(koyomi.settings.target.getFullYear(), koyomi.settings.target.getMonth(), day))) {
-                    attributes.push('today');
-                }
-                return attributes.join(' ');
-            },
-            isToday: function(targetDate) {
-                if(Today.getTime() === targetDate.getTime()) {
-                    return true;
-                }
-                return false;
-            }
-        }
-    }
     jQuery.fn.koyomi = function(method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -98,8 +75,6 @@
         //インスタンスメソッド
         jQuery.extend(Koyomi.prototype, {}, {
             buildKoyomi: function() {
-                firstDay  = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), 1);
-                endDay    = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth()+1, 0);
                 var html  = '';
                 html += '<div class="koyomi">';
                 html += '<table>';
@@ -126,11 +101,13 @@
                 return html;
             },
             buildMain: function() {
+                var firstDay  = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), 1);
+                var endDay    = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth()+1, 0);
                 var i         = 0;
                 var counter   = Counter(0, this.settings.weekBeginning);
-                var classAttr = ClassAattribute(this);
                 var weekData  = this.initWeekObject();
                 var html      = '';
+
                 html += '<tr>';
                 Object.keys(weekData).forEach(function(value, index) {
                     html += '<th class="'+weekData[value].class+'">'+weekData[value].name+'</th>';
@@ -140,19 +117,26 @@
                 if(this.settings.weekBeginning != firstDay.getDay()) {
                     html += '<tr>';
                     while(counter.getWeekNum() != firstDay.getDay()) {
-                        html += '<td class="'+classAttr.getAttribute(counter.getWeekNum())+'"></td>';
+                        var attributes = this.settings.weekdayClass[counter.getWeekNum()];
+                        html += '<td class="'+attributes+'"></td>';
                         counter.countUp();
                     }
                 }
+                //numbers
                 for(i=1; i<=endDay.getDate(); i++) {
                     if(!counter.getCellNum()) {
                         html += '<tr>';
+                    }
+                    var attributes = []
+                    attributes.push(this.settings.weekdayClass[counter.getWeekNum()]);
+                    if(this.isToday(new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), i))) {
+                        attributes.push('today');
                     }
                     var url = this.settings.url;
                     url = url.replace('%year%' ,this.settings.target.getFullYear());
                     url = url.replace('%month%',this.settings.target.getMonth()+1);
                     url = url.replace('%day%'  ,i);
-                    html += '<td class="'+classAttr.getAttribute(counter.getWeekNum(), i)+'"><div data-url="'+url+'">'+i+'</div></td>';
+                    html += '<td class="'+attributes.join(' ')+'"><div data-url="'+url+'">'+i+'</div></td>';
                     counter.countUp();
                     if(!counter.getCellNum()) {
                         html += '</tr>';
@@ -161,7 +145,8 @@
                 //after
                 if(counter.getCellNum()) {
                     while(counter.getCellNum()) {
-                        html += '<td class="'+classAttr.getAttribute(counter.getWeekNum())+'"></td>';
+                        var attributes = this.settings.weekdayClass[counter.getWeekNum()];
+                        html += '<td class="'+attributes+'"></td>';
                         counter.countUp();
                     }
                     html += '</tr>';
@@ -177,11 +162,18 @@
                 }
                 return result;
             },
+            isToday: function(targetDate) {
+                if(Today.getTime() === targetDate.getTime()) {
+                    return true;
+                }
+                return false;
+            },
+            getWeekDay: function() {
+                return this.settings.weekdayClass[weeknumber];
+            },
             _bind: function(funcName) {
               var that = this;
               return function() { that[funcName].apply(that, arguments) };
-            },
-            event: function() {
             }
         });
         return Koyomi;
