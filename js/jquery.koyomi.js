@@ -36,6 +36,9 @@
                     $this.empty();
                     koyomi.buildKoyomi();
                 });
+                jQuery($this).on("click", "td > div", function () {
+                    window.location.href = $(this).data("url");
+                });
             });
         }
     }
@@ -93,8 +96,8 @@
                 var headLabel = this.settings.headLabel;
                 headLabel = headLabel.replace('%month%',this.settings.monthNames[this.settings.target.getMonth()]);
                 headLabel = headLabel.replace('%year%', this.settings.target.getFullYear());
-                var html = '';
                 var colspan = 7;
+                var html = '';
                 html += '<tr>';
                 if(this.settings.prevNext) {
                     colspan = 5;
