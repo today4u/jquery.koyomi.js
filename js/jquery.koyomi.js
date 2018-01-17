@@ -36,7 +36,7 @@
                     $this.empty();
                     koyomi.buildKoyomi();
                 });
-                jQuery($this).on("click", "td > div", function () {
+                jQuery($this).on("click", "div.number", function () {
                     window.location.href = $(this).data("url");
                 });
             });
@@ -146,7 +146,7 @@
                     url = url.replace('%year%' ,this.settings.target.getFullYear());
                     url = url.replace('%month%',this.settings.target.getMonth()+1);
                     url = url.replace('%day%'  ,i);
-                    html += '<td class="'+attributes.join(' ')+'"><div data-url="'+url+'">'+i+'</div></td>';
+                    html += '<td class="'+attributes.join(' ')+'"><div class="number" data-url="'+url+'">'+i+'</div></td>';
                     counter.countUp();
                     if(!counter.getCellNum()) {
                         html += '</tr>';
