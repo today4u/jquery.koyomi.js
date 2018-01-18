@@ -14,6 +14,9 @@
                 "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
                 "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 "url": "http://example.com/%year%/%month%/%day%/",
+                "eventDates": {
+                    "dates": []
+                }
             },options);
             
             return this.each(function() {
@@ -134,13 +137,19 @@
                 }
                 //numbers
                 for(i=1; i<=endDay.getDate(); i++) {
+                    var Day = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), i);
                     if(!counter.getCellNum()) {
                         html += '<tr>';
                     }
                     var attributes = []
                     attributes.push(this.settings.weekdayClass[counter.getWeekNum()]);
-                    if(this.isToday(new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), i))) {
+                    //today
+                    if(this.isToday(Day)) {
                         attributes.push('today');
+                    }
+                    //eventDay
+                    if(this.isEventDay(Day)) {
+                        attributes.push('eventday');
                     }
                     var url = this.settings.url;
                     url = url.replace('%year%' ,this.settings.target.getFullYear());
@@ -175,6 +184,14 @@
             isToday: function(targetDate) {
                 if(Today.getTime() === targetDate.getTime()) {
                     return true;
+                }
+                return false;
+            },
+            isEventDay: function(targetDate) {
+                for (const value of this.settings.eventDates.dates) {
+                    if (new Date(value.date+' 00:00:00').getTime() == targetDate.getTime()) {
+                        return true;
+                    }
                 }
                 return false;
             },

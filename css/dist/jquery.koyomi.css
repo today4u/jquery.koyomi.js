@@ -1,5 +1,8 @@
 div.koyomi .today {
-    background-color:#fdd;
+    background-color:#f88;
+}
+div.koyomi .eventday {
+    background-color:#ff8;
 }
 div.koyomi .sun {
     color:#f00;
@@ -10,3 +13,4 @@ div.koyomi .sat {
 div.koyomi td {
   text-align:center;
 }
+
