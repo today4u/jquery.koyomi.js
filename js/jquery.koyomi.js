@@ -114,11 +114,11 @@
                 return html;
             },
             buildMain: function() {
-                var firstDay  = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), 1);
-                var endDay    = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth()+1, 0);
-                var i         = 0;
+                var firstDay   = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), 1);
+                var lastDay    = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth()+1, 0);
                 var counter   = Counter(0, this.settings.weekBeginning);
                 var weekData  = this.initWeekObject();
+                var events    = this.getCurrentMonthEvents();
                 var html      = '';
 
                 html += '<tr>';
@@ -136,7 +136,7 @@
                     }
                 }
                 //numbers
-                for(i=1; i<=endDay.getDate(); i++) {
+                for(var i=1; i<=lastDay.getDate(); i++) {
                     var Day = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), i);
                     if(!counter.getCellNum()) {
                         html += '<tr>';
@@ -148,7 +148,7 @@
                         attributes.push('today');
                     }
                     //eventDay
-                    if(this.isEventDay(Day)) {
+                    if(this.isEventDay(events, Day)) {
                         attributes.push('eventday');
                     }
                     var url = this.settings.url;
@@ -187,13 +187,23 @@
                 }
                 return false;
             },
-            isEventDay: function(targetDate) {
-                for (const value of this.settings.eventDates.dates) {
+            isEventDay: function(events, targetDate) {
+                for (const value of events) {
                     if (new Date(value.date+' 00:00:00').getTime() == targetDate.getTime()) {
                         return true;
                     }
                 }
                 return false;
+            },
+            getCurrentMonthEvents: function() {
+                var result = [];
+                for (const value of this.settings.eventDates.dates) {
+                    var a = value.date.split("-");
+                    if(Number(a[0]) === this.settings.target.getFullYear() && Number(a[1]) === this.settings.target.getMonth()+1) {
+                        result.push(value);
+                    }
+                }
+                return result;
             },
             getWeekDay: function() {
                 return this.settings.weekdayClass[weeknumber];
