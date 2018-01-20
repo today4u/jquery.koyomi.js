@@ -15,7 +15,7 @@
                 "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 "url": "http://example.com/%year%/%month%/%day%/",
                 "eventDates": {
-                    "dates": []
+                    "dates": [{"date":"2018-01-14"},{"date":"2018-01-21"},{"date":"2018-01-01"},{"date":"2018-02-02"},{"date":"2018-03-03"}]
                 }
             },options);
             
@@ -26,21 +26,24 @@
                 koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1 , 1);
                 //html build
                 koyomi.buildKoyomi();
+                koyomi.load();
                 //event (next or prev)
-                jQuery($this).on("click", "div.prev", function () {
-                    koyomi.settings.month = koyomi.settings.month-1;
-                    koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
-                    $this.empty();
-                    koyomi.buildKoyomi();
-                });
+                // jQuery($this).on("click", "div.prev", function () {
+                //     koyomi.settings.month = koyomi.settings.month-1;
+                //     koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
+                //     $this.empty();
+                //     koyomi.buildKoyomi();
+                //     koyomi.load();
+                // });
                 jQuery($this).on("click", "div.next", function () {
                     koyomi.settings.month = koyomi.settings.month+1;
                     koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
                     $this.empty();
                     koyomi.buildKoyomi();
+                    koyomi.load();
                 });
                 jQuery($this).on("click", "div.number", function () {
-                    window.location.href = $(this).data("url");
+                    window.locaion.href = $(this).data("url");
                 });
             });
         }
@@ -72,6 +75,9 @@
     var mergeOptions = function($el, settings) {
         return jQuery.extend(true,{}, settings, $el.data());
     };
+    var zeroPadding  = function(number, length) {
+        return (Array(length).join('0') + number).slice(-length);
+    };
     //class
     var Koyomi = (function() {
         //constructor
@@ -81,6 +87,21 @@
         }
         //インスタンスメソッド
         jQuery.extend(Koyomi.prototype, {}, {
+            load: function() {
+                var settings = this.settings;
+                //eventday
+                jQuery(document).ready(function(){
+                    $.each(settings.eventDates.dates, function(i, value) {
+                        $('.date_'+value.date).addClass('eventday');
+                    });
+                });
+                //today
+                jQuery(document).ready(function(){
+                    var targetSelector = '.date_'+Today.getFullYear()+'-'+zeroPadding(Today.getMonth()+1,2)+'-'+zeroPadding(Today.getDate(),2);
+                    console.log(targetSelector);
+                    $(targetSelector).addClass('today');
+                });
+            },
             buildKoyomi: function() {
                 var html  = '';
                 html += '<div class="koyomi">';
@@ -118,7 +139,6 @@
                 var lastDay    = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth()+1, 0);
                 var counter   = Counter(0, this.settings.weekBeginning);
                 var weekData  = this.initWeekObject();
-                var events    = this.getCurrentMonthEvents();
                 var html      = '';
 
                 html += '<tr>';
@@ -145,16 +165,13 @@
                     attributes.push(this.settings.weekdayClass[counter.getWeekNum()]);
                     //today
                     if(this.isToday(Day)) {
-                        attributes.push('today');
-                    }
-                    //eventDay
-                    if(this.isEventDay(events, Day)) {
-                        attributes.push('eventday');
+                        //attributes.push('today');
                     }
                     var url = this.settings.url;
                     url = url.replace('%year%' ,this.settings.target.getFullYear());
                     url = url.replace('%month%',this.settings.target.getMonth()+1);
                     url = url.replace('%day%'  ,i);
+                    attributes.push('date_'+Day.getFullYear()+'-'+zeroPadding(Day.getMonth()+1,2)+'-'+zeroPadding(Day.getDate(),2) );// date_yyyy-mm-dd
                     html += '<td class="'+attributes.join(' ')+'"><div class="number" data-url="'+url+'">'+i+'</div></td>';
                     counter.countUp();
                     if(!counter.getCellNum()) {
@@ -186,24 +203,6 @@
                     return true;
                 }
                 return false;
-            },
-            isEventDay: function(events, targetDate) {
-                for (const value of events) {
-                    if (new Date(value.date+' 00:00:00').getTime() == targetDate.getTime()) {
-                        return true;
-                    }
-                }
-                return false;
-            },
-            getCurrentMonthEvents: function() {
-                var result = [];
-                for (const value of this.settings.eventDates.dates) {
-                    var a = value.date.split("-");
-                    if(Number(a[0]) === this.settings.target.getFullYear() && Number(a[1]) === this.settings.target.getMonth()+1) {
-                        result.push(value);
-                    }
-                }
-                return result;
             },
             getWeekDay: function() {
                 return this.settings.weekdayClass[weeknumber];
