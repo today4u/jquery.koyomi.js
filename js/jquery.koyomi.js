@@ -89,16 +89,14 @@
         jQuery.extend(Koyomi.prototype, {}, {
             load: function() {
                 var settings = this.settings;
-                //eventday
+                //
                 jQuery(document).ready(function(){
+                    //eventday
                     $.each(settings.eventDates.dates, function(i, value) {
                         $('.date_'+value.date).addClass('eventday');
                     });
-                });
-                //today
-                jQuery(document).ready(function(){
+                    //today
                     var targetSelector = '.date_'+Today.getFullYear()+'-'+zeroPadding(Today.getMonth()+1,2)+'-'+zeroPadding(Today.getDate(),2);
-                    console.log(targetSelector);
                     $(targetSelector).addClass('today');
                 });
             },
