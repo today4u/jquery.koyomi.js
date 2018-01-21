@@ -28,13 +28,13 @@
                 koyomi.buildKoyomi();
                 koyomi.load();
                 //event (next or prev)
-                // jQuery($this).on("click", "div.prev", function () {
-                //     koyomi.settings.month = koyomi.settings.month-1;
-                //     koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
-                //     $this.empty();
-                //     koyomi.buildKoyomi();
-                //     koyomi.load();
-                // });
+                jQuery($this).on("click", "div.prev", function () {
+                    koyomi.settings.month = koyomi.settings.month-1;
+                    koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
+                    $this.empty();
+                    koyomi.buildKoyomi();
+                    koyomi.load();
+                });
                 jQuery($this).on("click", "div.next", function () {
                     koyomi.settings.month = koyomi.settings.month+1;
                     koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
