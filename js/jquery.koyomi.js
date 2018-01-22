@@ -15,7 +15,7 @@
                 "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 "url": "http://example.com/%year%/%month%/%day%/",
                 "eventDates": {
-                    "dates": [{"date":"2018-01-14"},{"date":"2018-01-21"},{"date":"2018-01-01"},{"date":"2018-02-02"},{"date":"2018-03-03"}]
+                    "dates": []
                 }
             },options);
             
@@ -43,7 +43,7 @@
                     koyomi.load();
                 });
                 jQuery($this).on("click", "div.number", function () {
-                    window.locaion.href = $(this).data("url");
+                    window.location.href = $(this).data("url");
                 });
             });
         }
@@ -88,17 +88,12 @@
         //インスタンスメソッド
         jQuery.extend(Koyomi.prototype, {}, {
             load: function() {
-                var settings = this.settings;
-                //
-                jQuery(document).ready(function(){
-                    //eventday
-                    $.each(settings.eventDates.dates, function(i, value) {
-                        $('.date_'+value.date).addClass('eventday');
-                    });
-                    //today
-                    var targetSelector = '.date_'+Today.getFullYear()+'-'+zeroPadding(Today.getMonth()+1,2)+'-'+zeroPadding(Today.getDate(),2);
-                    $(targetSelector).addClass('today');
+                var elements = this.$el
+                $.each(this.settings.eventDates.dates, function(i, value) {
+                    $(elements).find('.date_'+value.date).addClass('eventday');
                 });
+                //today
+                $(elements).find('.date_'+Today.getFullYear()+'-'+zeroPadding(Today.getMonth()+1,2)+'-'+zeroPadding(Today.getDate(),2)).addClass('today');
             },
             buildKoyomi: function() {
                 var html  = '';
@@ -161,15 +156,12 @@
                     }
                     var attributes = []
                     attributes.push(this.settings.weekdayClass[counter.getWeekNum()]);
-                    //today
-                    if(this.isToday(Day)) {
-                        //attributes.push('today');
-                    }
+                    attributes.push('date_'+Day.getFullYear()+'-'+zeroPadding(Day.getMonth()+1,2)+'-'+zeroPadding(Day.getDate(),2) );// date_yyyy-mm-dd
                     var url = this.settings.url;
                     url = url.replace('%year%' ,this.settings.target.getFullYear());
                     url = url.replace('%month%',this.settings.target.getMonth()+1);
                     url = url.replace('%day%'  ,i);
-                    attributes.push('date_'+Day.getFullYear()+'-'+zeroPadding(Day.getMonth()+1,2)+'-'+zeroPadding(Day.getDate(),2) );// date_yyyy-mm-dd
+                    
                     html += '<td class="'+attributes.join(' ')+'"><div class="number" data-url="'+url+'">'+i+'</div></td>';
                     counter.countUp();
                     if(!counter.getCellNum()) {
@@ -196,18 +188,12 @@
                 }
                 return result;
             },
-            isToday: function(targetDate) {
-                if(Today.getTime() === targetDate.getTime()) {
-                    return true;
-                }
-                return false;
-            },
             getWeekDay: function() {
                 return this.settings.weekdayClass[weeknumber];
             },
             _bind: function(funcName) {
-              var that = this;
-              return function() { that[funcName].apply(that, arguments) };
+                var that = this;
+                return function() { that[funcName].apply(that, arguments) };
             }
         });
         return Koyomi;
