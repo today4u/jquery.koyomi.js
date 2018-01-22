@@ -94,15 +94,15 @@
                 var settings = this.settings
                 //dates
                 $.each(settings.eventDates.dates, function(i, value) {
-                    $(elements).find('.date_'+value.date).addClass('eventday');
+                    $(elements).find('.date_'+value.date).addClass(value.class?value.class:'eventday');
                 });
                 //yearly
                 $.each(settings.eventDates.yearly, function(i, value) {
-                    $(elements).find('.date_'+settings.target.getFullYear()+'-'+value.date).addClass('eventday');
+                    $(elements).find('.date_'+settings.target.getFullYear()+'-'+value.date).addClass(value.class?value.class:'eventday');
                 });
                 //monthly
                 $.each(settings.eventDates.monthly, function(i, value) {
-                    $(elements).find('.date_'+settings.target.getFullYear()+'-'+zeroPadding(settings.target.getMonth()+1,2)+'-'+zeroPadding(value.date,2)).addClass('eventday');
+                    $(elements).find('.date_'+settings.target.getFullYear()+'-'+zeroPadding(settings.target.getMonth()+1,2)+'-'+zeroPadding(value.date,2)).addClass(value.class?value.class:'eventday');
                 });
                 //today
                 $(elements).find('.date_'+Today.getFullYear()+'-'+zeroPadding(Today.getMonth()+1,2)+'-'+zeroPadding(Today.getDate(),2)).addClass('today');
