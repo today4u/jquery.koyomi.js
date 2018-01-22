@@ -15,7 +15,8 @@
                 "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 "url": "http://example.com/%year%/%month%/%day%/",
                 "eventDates": {
-                    "dates": []
+                    "dates" : [],
+                    "yearly": []
                 }
             },options);
             
@@ -89,8 +90,12 @@
         jQuery.extend(Koyomi.prototype, {}, {
             load: function() {
                 var elements = this.$el
-                $.each(this.settings.eventDates.dates, function(i, value) {
+                var settings = this.settings
+                $.each(settings.eventDates.dates, function(i, value) {
                     $(elements).find('.date_'+value.date).addClass('eventday');
+                });
+                $.each(settings.eventDates.yearly, function(i, value) {
+                    $(elements).find('.date_'+settings.target.getFullYear()+'-'+value.date).addClass('eventday');
                 });
                 //today
                 $(elements).find('.date_'+Today.getFullYear()+'-'+zeroPadding(Today.getMonth()+1,2)+'-'+zeroPadding(Today.getDate(),2)).addClass('today');
