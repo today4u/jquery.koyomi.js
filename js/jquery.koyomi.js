@@ -15,8 +15,9 @@
                 "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 "url": "http://example.com/%year%/%month%/%day%/",
                 "eventDates": {
-                    "dates" : [],
-                    "yearly": []
+                    "dates" :  [],
+                    "yearly":  [],
+                    "monthly": [],
                 }
             },options);
             
@@ -91,11 +92,17 @@
             load: function() {
                 var elements = this.$el
                 var settings = this.settings
+                //dates
                 $.each(settings.eventDates.dates, function(i, value) {
                     $(elements).find('.date_'+value.date).addClass('eventday');
                 });
+                //yearly
                 $.each(settings.eventDates.yearly, function(i, value) {
                     $(elements).find('.date_'+settings.target.getFullYear()+'-'+value.date).addClass('eventday');
+                });
+                //monthly
+                $.each(settings.eventDates.monthly, function(i, value) {
+                    $(elements).find('.date_'+settings.target.getFullYear()+'-'+zeroPadding(settings.target.getMonth()+1,2)+'-'+zeroPadding(value.date,2)).addClass('eventday');
                 });
                 //today
                 $(elements).find('.date_'+Today.getFullYear()+'-'+zeroPadding(Today.getMonth()+1,2)+'-'+zeroPadding(Today.getDate(),2)).addClass('today');
