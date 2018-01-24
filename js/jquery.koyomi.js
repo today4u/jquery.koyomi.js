@@ -9,6 +9,8 @@
                 "month": Now.getMonth()+1,  // 1-12
                 "headLabel": "%year% %month%",
                 "prevNext": true,
+                "prevSign": "＜",
+                "nextSign": "＞",
                 "weekBeginning": 0, //0-6
                 "weekdayNames" : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
@@ -130,11 +132,11 @@
                 html += '<tr>';
                 if(this.settings.prevNext) {
                     colspan = 5;
-                    html +=   '<td><div class="prev">＜</div></td>';
+                    html +=   '<td><div class="prev">'+this.settings.prevSign+'</div></td>';
                 }
                 html +=   '<td colspan="'+colspan+'"><div class="headLabel">'+headLabel+'</div></td>';
                 if(this.settings.prevNext) {
-                    html +=   '<td><div class="next">＞</div></td>';
+                    html +=   '<td><div class="next">'+this.settings.nextSign+'</div></td>';
                 }
                 html += '</tr>';
                 return html;
