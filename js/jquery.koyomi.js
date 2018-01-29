@@ -11,6 +11,12 @@
                 "prevNext": true,
                 "prevSign": "＜",
                 "nextSign": "＞",
+                "eraName": [
+                    {"name":"明治","firstDate":"1868-01-25", "lastDate":"1912-07-29"},
+                    {"name":"大正","firstDate":"1912-07-30", "lastDate":"1926-12-24"},
+                    {"name":"昭和","firstDate":"1926-12-25", "lastDate":"1989-01-07"},
+                    {"name":"平成","firstDate":"1989-01-08"},
+                ],
                 "weekBeginning": 0, //0-6
                 "weekdayNames" : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
