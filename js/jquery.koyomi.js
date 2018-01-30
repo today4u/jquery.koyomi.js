@@ -33,7 +33,8 @@
                 var $this = jQuery(this);
                 var settings = mergeOptions($this, defaults);
                 var koyomi = new Koyomi($this, settings);
-                koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1 , 1);
+                koyomi.settings.FirstDay = new Date(koyomi.settings.year, koyomi.settings.month-1, 1);
+                koyomi.settings.LastDay  = new Date(koyomi.settings.year, koyomi.settings.month,   0);
                 //html build
                 koyomi.buildKoyomi();
                 koyomi.load();
@@ -47,7 +48,8 @@
                             koyomi.settings.month = koyomi.settings.month+1;
                             break;
                     }
-                    koyomi.settings.target = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
+                    koyomi.settings.FirstDay = new Date(koyomi.settings.year, koyomi.settings.month-1,1);
+                    koyomi.settings.LastDay  = new Date(koyomi.settings.year, koyomi.settings.month,  0);
                     $this.empty();
                     koyomi.buildKoyomi();
                     koyomi.load();
@@ -106,11 +108,11 @@
                 });
                 //yearly
                 $.each(settings.eventDates.yearly, function(i, value) {
-                    $(elements).find('.date_'+settings.target.getFullYear()+'-'+value.date).addClass(value.class?value.class:'eventday');
+                    $(elements).find('.date_'+settings.FirstDay.getFullYear()+'-'+value.date).addClass(value.class?value.class:'eventday');
                 });
                 //monthly
                 $.each(settings.eventDates.monthly, function(i, value) {
-                    $(elements).find('.date_'+settings.target.getFullYear()+'-'+zeroPadding(settings.target.getMonth()+1,2)+'-'+zeroPadding(value.date,2)).addClass(value.class?value.class:'eventday');
+                    $(elements).find('.date_'+settings.FirstDay.getFullYear()+'-'+zeroPadding(settings.FirstDay.getMonth()+1,2)+'-'+zeroPadding(value.date,2)).addClass(value.class?value.class:'eventday');
                 });
                 //today
                 $(elements).find('.date_'+Today.getFullYear()+'-'+zeroPadding(Today.getMonth()+1,2)+'-'+zeroPadding(Today.getDate(),2)).addClass('today');
@@ -131,8 +133,8 @@
             },
             buildHead: function() {
                 var headLabel = this.settings.headLabel;
-                headLabel = headLabel.replace('%month%',this.settings.monthNames[this.settings.target.getMonth()]);
-                headLabel = headLabel.replace('%year%', this.settings.target.getFullYear());
+                headLabel = headLabel.replace('%month%',this.settings.monthNames[this.settings.FirstDay.getMonth()]);
+                headLabel = headLabel.replace('%year%', this.settings.FirstDay.getFullYear());
                 var colspan = 7;
                 var html = '';
                 html += '<tr>';
@@ -148,8 +150,7 @@
                 return html;
             },
             buildMain: function() {
-                var firstDay   = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), 1);
-                var lastDay    = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth()+1, 0);
+                var lastDay    = new Date(this.settings.FirstDay.getFullYear(), this.settings.FirstDay.getMonth()+1, 0);
                 var counter   = Counter(0, this.settings.weekBeginning);
                 var weekData  = this.initWeekObject();
                 var html      = '';
@@ -160,17 +161,17 @@
                 });
                 html += '</tr>';
                 //before 
-                if(this.settings.weekBeginning != firstDay.getDay()) {
+                if(this.settings.weekBeginning != this.settings.FirstDay.getDay()) {
                     html += '<tr>';
-                    while(counter.getWeekNum() != firstDay.getDay()) {
+                    while(counter.getWeekNum() != this.settings.FirstDay.getDay()) {
                         var attributes = this.settings.weekdayClass[counter.getWeekNum()];
                         html += '<td class="'+attributes+'"></td>';
                         counter.countUp();
                     }
                 }
                 //numbers
-                for(var i=1; i<=lastDay.getDate(); i++) {
-                    var Day = new Date(this.settings.target.getFullYear(), this.settings.target.getMonth(), i);
+                for(var i=1; i<=this.settings.LastDay.getDate(); i++) {
+                    var Day = new Date(this.settings.FirstDay.getFullYear(), this.settings.FirstDay.getMonth(), i);
                     if(!counter.getCellNum()) {
                         html += '<tr>';
                     }
@@ -178,8 +179,8 @@
                     attributes.push(this.settings.weekdayClass[counter.getWeekNum()]);
                     attributes.push('date_'+Day.getFullYear()+'-'+zeroPadding(Day.getMonth()+1,2)+'-'+zeroPadding(Day.getDate(),2) );// date_yyyy-mm-dd
                     var url = this.settings.url;
-                    url = url.replace('%year%' ,this.settings.target.getFullYear());
-                    url = url.replace('%month%',this.settings.target.getMonth()+1);
+                    url = url.replace('%year%' ,this.settings.FirstDay.getFullYear());
+                    url = url.replace('%month%',this.settings.FirstDay.getMonth()+1);
                     url = url.replace('%day%'  ,i);
                     
                     html += '<td class="'+attributes.join(' ')+'"><div class="number" data-url="'+url+'">'+i+'</div></td>';
