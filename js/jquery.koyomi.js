@@ -11,7 +11,8 @@
                 "prevNext": true,
                 "prevSign": "＜",
                 "nextSign": "＞",
-                "eraName": [
+                "useJapaneseEra": 0,
+                "japaneseEras": [
                     {"name":"明治","firstDate":"1868-01-25", "lastDate":"1912-07-29"},
                     {"name":"大正","firstDate":"1912-07-30", "lastDate":"1926-12-24"},
                     {"name":"昭和","firstDate":"1926-12-25", "lastDate":"1989-01-07"},
@@ -90,6 +91,10 @@
     var zeroPadding  = function(number, length) {
         return (Array(length).join('0') + number).slice(-length);
     };
+    var strToDate = function(string) {
+        var array = string.split('-');
+        return new Date(array[0], array[1]-1,   array[2]);
+    };
     //class
     var Koyomi = (function() {
         //constructor
@@ -135,6 +140,9 @@
                 var headLabel = this.settings.headLabel;
                 headLabel = headLabel.replace('%month%',this.settings.monthNames[this.settings.FirstDay.getMonth()]);
                 headLabel = headLabel.replace('%year%', this.settings.FirstDay.getFullYear());
+                if(this.settings.useJapaneseEra) {
+                    headLabel = headLabel.replace('%era%',  this.getJapaneseEra());
+                }
                 var colspan = 7;
                 var html = '';
                 html += '<tr>';
@@ -211,6 +219,32 @@
             },
             getWeekDay: function() {
                 return this.settings.weekdayClass[weeknumber];
+            },
+            getJapaneseEra: function() {
+                var settings   = this.settings;
+                var result = [];
+                $.each(settings.japaneseEras, function(i, value) {
+                    var firstDate = strToDate(value.firstDate);
+                    if(value.lastDate !== undefined) {
+                        var lastDate  = strToDate(value.lastDate);
+                    }
+                    switch(true) {
+                        case firstDate.getTime() <= settings.LastDay.getTime()  && value.lastDate    === undefined:
+                        case firstDate.getTime() <= settings.FirstDay.getTime() && lastDate.getTime() >= settings.FirstDay.getTime():
+                            result.push((function(name) {
+                                var eraYear = settings.FirstDay.getFullYear()+1 - firstDate.getFullYear();
+                                if(eraYear === 1) {
+                                    return name+'元年';
+                                } else {
+                                    return name+eraYear+'年';
+                                }
+                            })(value.name));
+                            break;
+                        default:
+                            break;
+                    }
+                });
+                return result.join('/');
             },
             _bind: function(funcName) {
                 var that = this;
