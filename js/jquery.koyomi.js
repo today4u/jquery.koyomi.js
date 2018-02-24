@@ -29,7 +29,6 @@
                     "monthly": [],
                 }
             },options);
-            
             return this.each(function() {
                 var $this = jQuery(this);
                 var settings = mergeOptions($this, defaults);
@@ -126,12 +125,8 @@
                 var html  = '';
                 html += '<div class="koyomi">';
                 html += '<table>';
-                html +=   '<thead>';
                 html +=     this.buildHead();
-                html +=   '</thead>';
-                html +=   '<tbody>';
                 html +=     this.buildMain();
-                html +=   '</tbody>';
                 html += '</table>';
                 html += '</div>';
                 this.$el.append(html);
@@ -144,36 +139,34 @@
                     headLabel = headLabel.replace('%era%',  this.getJapaneseEra());
                 }
                 var colspan = 7;
-                var html = '';
-                html += '<tr>';
+                var tr   = $('<tr></tr>');
                 if(this.settings.prevNext) {
                     colspan = 5;
-                    html +=   '<td><div class="prev">'+this.settings.prevSign+'</div></td>';
+                    tr.append($('<td></td>').append($('<div class="prev"></div>').text(this.settings.prevSign)));
                 }
-                html +=   '<td colspan="'+colspan+'"><div class="headLabel">'+headLabel+'</div></td>';
+                $(tr).append($('<td colspan="'+colspan+'">').append($('<div class="headLabel"></div>').text(headLabel)));
                 if(this.settings.prevNext) {
-                    html +=   '<td><div class="next">'+this.settings.nextSign+'</div></td>';
+                    tr.append($('<td></td>').append($('<div class="next"></div>').text(this.settings.nextSign)));
                 }
-                html += '</tr>';
-                return html;
+                return $('<thead></thead>').append(tr).prop("outerHTML");
+                //return thead.prop("outerHTML");
             },
             buildMain: function() {
-                var lastDay    = new Date(this.settings.FirstDay.getFullYear(), this.settings.FirstDay.getMonth()+1, 0);
+                var lastDay   = new Date(this.settings.FirstDay.getFullYear(), this.settings.FirstDay.getMonth()+1, 0);
                 var counter   = Counter(0, this.settings.weekBeginning);
                 var weekData  = this.initWeekObject();
-                var html      = '';
-
-                html += '<tr>';
+                //
+                var tbody     = $('<tbody></tbody>');
+                var tr        = $('<tr></tr>');
                 Object.keys(weekData).forEach(function(value, index) {
-                    html += '<th class="'+weekData[value].class+'">'+weekData[value].name+'</th>';
+                    tr.append($('<th></th>').addClass(weekData[value].class).text(weekData[value].name));
                 });
-                html += '</tr>';
+                $(tbody).append(tr);
                 //before 
                 if(this.settings.weekBeginning != this.settings.FirstDay.getDay()) {
-                    html += '<tr>';
+                    tr = $('<tr></tr>');
                     while(counter.getWeekNum() != this.settings.FirstDay.getDay()) {
-                        var attributes = this.settings.weekdayClass[counter.getWeekNum()];
-                        html += '<td class="'+attributes+'"></td>';
+                        tr.append($('<td></td>').addClass(this.settings.weekdayClass[counter.getWeekNum()]));
                         counter.countUp();
                     }
                 }
@@ -181,7 +174,7 @@
                 for(var i=1; i<=this.settings.LastDay.getDate(); i++) {
                     var Day = new Date(this.settings.FirstDay.getFullYear(), this.settings.FirstDay.getMonth(), i);
                     if(!counter.getCellNum()) {
-                        html += '<tr>';
+                        tr = $('<tr></tr>');
                     }
                     var attributes = []
                     attributes.push(this.settings.weekdayClass[counter.getWeekNum()]);
@@ -190,23 +183,24 @@
                     url = url.replace('%year%' ,this.settings.FirstDay.getFullYear());
                     url = url.replace('%month%',this.settings.FirstDay.getMonth()+1);
                     url = url.replace('%day%'  ,i);
-                    
-                    html += '<td class="'+attributes.join(' ')+'"><div class="number" data-url="'+url+'">'+i+'</div></td>';
+                    //
+                    var div  = $('<div></div>').attr('data-url',url).addClass("number").text(i);
+                    tr.append($('<td></td>').addClass(attributes.join(' ')).append(div) );
                     counter.countUp();
                     if(!counter.getCellNum()) {
-                        html += '</tr>';
+                        tbody.append(tr);
                     }
                 }
                 //after
                 if(counter.getCellNum()) {
                     while(counter.getCellNum()) {
-                        var attributes = this.settings.weekdayClass[counter.getWeekNum()];
-                        html += '<td class="'+attributes+'"></td>';
+                        tr.append($('<td></td>').addClass(this.settings.weekdayClass[counter.getWeekNum()]));
                         counter.countUp();
                     }
-                    html += '</tr>';
+                    tbody.append(tr);
                 }
-                return html;
+                return tbody.prop("outerHTML");
+                //return html;
             },
             initWeekObject: function() {
                 var counter = Counter(this.settings.weekBeginning, this.settings.weekBeginning);
