@@ -1,0 +1,1 @@
+div.koyomi table{table-layout:fixed;width:100%;border-collapse:collapse;border-spacing:0}div.koyomi .today>div{box-sizing:border-box;border:2px solid red}div.koyomi .eventday{background-color:#ff8}div.koyomi .sun{color:red}div.koyomi .sat{color:#00f}div.koyomi th,td{text-align:center;border:1px solid #888}div.koyomi div.number,div.koyomi div.prev,div.next{cursor:pointer}
