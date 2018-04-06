@@ -1,5 +1,4 @@
 ;(function(jQuery) {
-    'use strict';
     var Now      = new Date();
     var Today    = new Date(Now.getFullYear(), Now.getMonth(), Now.getDate());
     var methods  = {
@@ -19,15 +18,14 @@
                     {"name":"平成","firstDate":"1989-01-08"},
                 ],
                 "weekBeginning": 0, //0-6
-                "weekdayNames" : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
-                "monthNames"   : ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 "url": "http://example.com/%year%/%month%/%day%/",
                 "eventDates": {
                     "dates" :  [],
                     "yearly":  [],
                     "monthly": [],
-                }
+                },
+                "language": "en"
             },options);
             return this.each(function() {
                 var $this = jQuery(this);
@@ -132,8 +130,9 @@
                 this.$el.append(html);
             },
             buildHead: function() {
+                var labels    = getLabels(this.settings.language);
                 var headLabel = this.settings.headLabel;
-                headLabel = headLabel.replace('%month%',this.settings.monthNames[this.settings.FirstDay.getMonth()]);
+                headLabel = headLabel.replace('%month%',labels.month[this.settings.FirstDay.getMonth()]);
                 headLabel = headLabel.replace('%year%', this.settings.FirstDay.getFullYear());
                 if(this.settings.useJapaneseEra) {
                     headLabel = headLabel.replace('%era%',  this.getJapaneseEra());
@@ -203,10 +202,11 @@
                 //return html;
             },
             initWeekObject: function() {
+                var labels  = getLabels(this.settings.language);
                 var counter = Counter(this.settings.weekBeginning, this.settings.weekBeginning);
                 var result  = new Object;
                 for(var i=0; i<7; i++) {
-                    result[i] = {"name": this.settings.weekdayNames[counter.getCellNum()], "class": this.settings.weekdayClass[counter.getCellNum()]}
+                    result[i] = {"name": labels.dow[counter.getCellNum()], "class": this.settings.weekdayClass[counter.getCellNum()]}
                     counter.countUp();
                 }
                 return result;
@@ -247,4 +247,17 @@
         });
         return Koyomi;
     })();
+    var getLabels = function(lang) {
+        if(lang === undefined || lang === false) {
+            lang = 'en';
+        }
+        switch(lang) {
+            case 'en':
+            default:
+                return {
+                    dow:   ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    month: ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                };
+        }
+    }
 }) (jQuery);
