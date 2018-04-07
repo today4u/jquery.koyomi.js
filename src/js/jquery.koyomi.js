@@ -249,10 +249,15 @@
             lang = 'en';
         }
         switch(lang) {
+            case 'ja':
+                return {
+                    dow:   ['日', '月', '火', '水', '木', '金', '土'],
+                    month: ['1月','2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                };
             case 'en':
             default:
                 return {
-                    dow:   ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    dow:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
                     month: ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
                 };
         }
