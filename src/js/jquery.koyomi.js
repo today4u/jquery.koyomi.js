@@ -18,7 +18,7 @@
                     {"name":"平成","firstDate":"1989-01-08"},
                 ],
                 "weekBeginning": 0, //0-6
-                "weekdayClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
+                "dowClass" : ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
                 "url": "http://example.com/%year%/%month%/%day%/",
                 "eventDates": {
                     "dates" :  [],
@@ -165,7 +165,7 @@
                 if(this.settings.weekBeginning != this.settings.FirstDay.getDay()) {
                     tr = $('<tr></tr>');
                     while(counter.getWeekNum() != this.settings.FirstDay.getDay()) {
-                        tr.append($('<td></td>').addClass(this.settings.weekdayClass[counter.getWeekNum()]));
+                        tr.append($('<td></td>').addClass(this.settings.dowClass[counter.getWeekNum()]));
                         counter.countUp();
                     }
                 }
@@ -176,7 +176,7 @@
                         tr = $('<tr></tr>');
                     }
                     var attributes = []
-                    attributes.push(this.settings.weekdayClass[counter.getWeekNum()]);
+                    attributes.push(this.settings.dowClass[counter.getWeekNum()]);
                     attributes.push('date_'+Day.getFullYear()+'-'+zeroPadding(Day.getMonth()+1,2)+'-'+zeroPadding(Day.getDate(),2) );// date_yyyy-mm-dd
                     var url = this.settings.url;
                     url = url.replace('%year%' ,this.settings.FirstDay.getFullYear());
@@ -193,7 +193,7 @@
                 //after
                 if(counter.getCellNum()) {
                     while(counter.getCellNum()) {
-                        tr.append($('<td></td>').addClass(this.settings.weekdayClass[counter.getWeekNum()]));
+                        tr.append($('<td></td>').addClass(this.settings.dowClass[counter.getWeekNum()]));
                         counter.countUp();
                     }
                     tbody.append(tr);
@@ -206,13 +206,10 @@
                 var counter = Counter(this.settings.weekBeginning, this.settings.weekBeginning);
                 var result  = new Object;
                 for(var i=0; i<7; i++) {
-                    result[i] = {"name": labels.dow[counter.getCellNum()], "class": this.settings.weekdayClass[counter.getCellNum()]}
+                    result[i] = {"name": labels.dow[counter.getCellNum()], "class": this.settings.dowClass[counter.getCellNum()]}
                     counter.countUp();
                 }
                 return result;
-            },
-            getWeekDay: function() {
-                return this.settings.weekdayClass[weeknumber];
             },
             getJapaneseEra: function() {
                 var settings   = this.settings;
