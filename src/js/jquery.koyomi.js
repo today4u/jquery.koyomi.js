@@ -249,17 +249,22 @@
             lang = 'en';
         }
         switch(lang) {
+            case 'en':
+                return {
+                    dow:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    month: ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                };
             case 'ja':
                 return {
                     dow:   ['日', '月', '火', '水', '木', '金', '土'],
                     month: ['1月','2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
                 };
-            case 'en':
-            default:
+            case 'zh':
                 return {
-                    dow:   ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                    month: ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                    dow:   ['日', '一', '二', '三', '四', '五', '六'],
+                    month: ['一月','二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
                 };
         }
     }
 }) (jQuery);
+
