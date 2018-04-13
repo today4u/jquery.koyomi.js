@@ -25,7 +25,9 @@
                     "yearly":  [],
                     "monthly": [],
                 },
-                "language": "en"
+                "language":   "en",
+                "dowLabel":   "dowShort",
+                "monthLabel": "monthShort"
             },options);
             return this.each(function() {
                 var $this = jQuery(this);
@@ -132,7 +134,7 @@
             buildHead: function() {
                 var labels    = getLabels(this.settings.language);
                 var headLabel = this.settings.headLabel;
-                headLabel = headLabel.replace('%month%',labels.month[this.settings.FirstDay.getMonth()]);
+                headLabel = headLabel.replace('%month%',labels[this.settings.monthLabel][this.settings.FirstDay.getMonth()]);
                 headLabel = headLabel.replace('%year%', this.settings.FirstDay.getFullYear());
                 if(this.settings.useJapaneseEra) {
                     headLabel = headLabel.replace('%era%',  this.getJapaneseEra());
@@ -206,7 +208,7 @@
                 var counter = Counter(this.settings.weekBeginning, this.settings.weekBeginning);
                 var result  = new Object;
                 for(var i=0; i<7; i++) {
-                    result[i] = {"name": labels.dow[counter.getCellNum()], "class": this.settings.dowClass[counter.getCellNum()]}
+                    result[i] = {"name": labels[this.settings.dowLabel][counter.getCellNum()], "class": this.settings.dowClass[counter.getCellNum()]}
                     counter.countUp();
                 }
                 return result;
