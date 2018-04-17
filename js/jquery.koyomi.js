@@ -259,6 +259,14 @@
                     monthShort: ['Jan',    'Feb',      'Mar',   'Apr',   'May', 'Jun',  'Jul',  'Aug',    'Sep',       'Oct',     'Nov',      'Dec']
                 };
                 break;
+            case 'es':
+                var labels = {
+                    dow:        ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    dowShort:   ['Do',      'Lu',    'Ma',     'Mi',        'Ju',     'Vi',      'Sá'],
+                    month:      ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    monthShort: ['Ene',   'Feb',     'Mar',   'Abr',   'May',  'Jun',   'Jul',   'Ago',    'Sep',        'Oct',     'Nov',       'Dic'],
+                };
+                break;
             case 'ja':
                 var labels = {
                     dow:        ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
